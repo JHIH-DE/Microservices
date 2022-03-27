@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  db:
+    container_name: postgres
+    image: postgres:13.2-alpine
+    restart: unless-stopped #always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: amigoscode
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped #always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: p9289213@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      #PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    #links:
+    #  - "db:pgsql-server"
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  db-data:
+  pgadmin-data:

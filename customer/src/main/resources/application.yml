@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: customer
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        format_sql: 'true'
+        temp:
+          se_jdbc_metadata_defaults: 'false'
+        jdbc:
+          lob:
+            non_contextual_creation: 'true'
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/customer
+    username: 'amigoscode'
+    password: 'password'
+    driverClassName: org.postgresql.Driver
