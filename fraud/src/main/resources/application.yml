@@ -1,9 +1,9 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
-    name: customer
+    name: fraud
   jpa:
     database: POSTGRESQL
     show-sql: true
@@ -20,7 +20,7 @@ spring:
       ddl-auto: create-drop
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/customer
+    url: jdbc:postgresql://localhost:5432/fraud
     username: 'amigoscode'
     password: 'password'
     driverClassName: org.postgresql.Driver
