@@ -30,3 +30,9 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
+zipkin:
+  base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      # 採樣率，模式0.1，也就是10%，為了便於觀察效果，改為1.0，也就是100%。生產環境建議保持默認。
+      probability: 1.0
