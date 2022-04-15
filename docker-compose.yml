@@ -32,39 +32,6 @@ services:
     #  - "db:pgsql-server"
     networks:
       - postgres
-  storage:
-    image: openzipkin/zipkin-elasticsearch6
-    container_name: elasticsearch
-  zipkin:
-    image: openzipkin/zipkin
-    container_name: zipkin
-    environment:
-      - STORAGE_TYPE=elasticsearch
-      # Point the zipkin at the storage backend
-      - ES_HOSTS=elasticsearch
-      # Uncomment to see requests to and from elasticsearch
-      # - ES_HTTP_LOGGING=BODY
-    ports:
-      # Port used for the Zipkin UI and HTTP Api
-      - 9411:9411
-      # Uncomment if you set SCRIBE_ENABLED=true
-      # - 9410:9410
-    depends_on:
-      - storage
-
-  dependencies:
-    image: openzipkin/zipkin-dependencies
-    container_name: dependencies
-    entrypoint: crond -f
-    environment:
-      - STORAGE_TYPE=elasticsearch
-      - ES_HOSTS=elasticsearch
-      # Uncomment to see dependency processing logs
-      # - ZIPKIN_LOG_LEVEL=DEBUG
-      # Uncomment to adjust memory used by the dependencies job
-      # - JAVA_OPTS=-verbose:gc -Xms1G -Xmx1G
-    depends_on:
-      - storage
 networks:
   postgres:
     driver: bridge
