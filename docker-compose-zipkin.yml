@@ -1,12 +1,12 @@
 version: '2'
 services:
-  storage:
-    image: openzipkin/zipkin-elasticsearch6
-    container_name: elasticsearch
-    ports:
-      - 9200:9200
-    volumes:
-      - /usr/share/elasticsearch
+  #storage:
+  #  image: openzipkin/zipkin-elasticsearch6
+  #  container_name: zipkin-elasticsearch
+  #  ports:
+  #    - 9200:9200
+  #  volumes:
+  #   - zipkin-data:/usr/share/elasticsearch
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
@@ -16,24 +16,37 @@ services:
       - ES_HOSTS=elasticsearch
       # Uncomment to see requests to and from elasticsearch
       # - ES_HTTP_LOGGING=BODY
+      - ES_USERNAME=elastic
+      - ES_PASSWORD=changeme
     ports:
       # Port used for the Zipkin UI and HTTP Api
       - 9411:9411
       # Uncomment if you set SCRIBE_ENABLED=true
       # - 9410:9410
-    depends_on:
-      - storage
+    #depends_on:
+    #  - storage
+    networks:
+      - docker-elk_elk
 
   dependencies:
     image: openzipkin/zipkin-dependencies
-    container_name: dependencies
+    container_name: zipkin-dependencies
     entrypoint: crond -f
     environment:
       - STORAGE_TYPE=elasticsearch
       - ES_HOSTS=elasticsearch
+      - ES_USERNAME=elastic
+      - ES_PASSWORD=changeme
       # Uncomment to see dependency processing logs
       # - ZIPKIN_LOG_LEVEL=DEBUG
       # Uncomment to adjust memory used by the dependencies job
       # - JAVA_OPTS=-verbose:gc -Xms1G -Xmx1G
-    depends_on:
-      - storage
+    #depends_on:
+    #  - storage
+    networks:
+      - docker-elk_elk
+volumes:
+  zipkin-data:
+networks:
+  docker-elk_elk:
+    external: true

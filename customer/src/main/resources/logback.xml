@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+  <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+
+  <property name="LOG_HOME" value="logs" />
+
+  <!-- 應用名稱：和統一配置中的專案程式碼保持一致（小寫） -->
+  <property name="APP_NAME" value="customer" />
+
+  <property name="LOG_MAX_HISTORY" value="30" />
+
+  <property name="LOG_APP_HOME" value="${LOG_HOME}/%d{yyyy-MM-dd}" />
+
+  <property name="CONSOLE_LOG_PATTERN"
+    value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([%X{traceId}/%X{spanId}]) %clr([%X{sessionId}]){yellow} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+  <!-- Appender to log to console -->
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+      <charset>utf8</charset>
+    </encoder>
+  </appender>
+
+  <!-- Appender to log to logstash -->
+  <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <destination>localhost:5000</destination>
+    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+      <providers>
+        <timestamp>
+          <timeZone>UTC</timeZone>
+        </timestamp>
+        <pattern>
+          <pattern>
+            {
+            "timestamp": "@timestamp",
+            "severity": "%level",
+            "service": "${springAppName:-}",
+            "traceId": "%X{traceId:-}",
+            "spanId": "%X{spanId:-}",
+            "sessionId": "%X{sessionId:-}",
+            "baggage": "%X{key:-}",
+            "pid": "${PID:-}",
+            "thread": "%thread",
+            "class": "%logger{40}",
+            "rest": "%message"
+            }
+          </pattern>
+        </pattern>
+      </providers>
+    </encoder>
+  </appender>
+
+  <!-- Appender to log to file -->
+  <appender name="flatfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_APP_HOME}/${APP_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="console"/>
+    <!-- uncomment this to have also JSON logs -->
+    <appender-ref ref="logstash"/>
+    <appender-ref ref="flatfile"/>
+  </root>
+</configuration>
