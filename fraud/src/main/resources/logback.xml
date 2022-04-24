@@ -14,7 +14,7 @@
   <property name="LOG_APP_HOME" value="${LOG_HOME}/%d{yyyy-MM-dd}" />
 
   <property name="CONSOLE_LOG_PATTERN"
-    value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([%X{traceId}/%X{spanId}]) %clr([%X{sessionId}]){yellow} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+            value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([%X{traceId}/%X{spanId}]) %clr([%X{sessionId}]){yellow} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
   <!-- Appender to log to console -->
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
